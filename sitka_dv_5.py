@@ -5,11 +5,21 @@ import matplotlib.pyplot as plt
 
 
 def get_weather(file, dates, highs, lows, date_index, high_index, low_index):
+    station_name = ""
     with open(file) as x:
         reader = csv.reader(x)
         header_row = next(reader)
 
+        print(header_row)
+        date_index = header_row.index("DATE")
+        high_index = header_row.index("TMAX")
+        low_index = header_row.index("TMIN")
+        name_index = header_row.index("NAME")
+
         for row in reader:
+            if not station_name:
+                station_name = row[name_index]
+
             converted_date = datetime.strptime(row[date_index], "%Y-%m-%d")
             try:
                 high = int(row[high_index])

@@ -1,1 +1,1 @@
-plt.fill_between(dates, highs, lows, facecolor="blue", alpha=0.1)
+"SITKA AIRPORT, AK US"
