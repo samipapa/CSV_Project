@@ -3,65 +3,66 @@ from datetime import datetime
 
 import matplotlib.pyplot as plt
 
-open_file = open("sitka_weather_2018_simple.csv", "r")
-open_file = open("death_valley_2018_simple.csv", "r")
 
-csv_file = csv.reader(open_file, delimiter=",")
+def get_weather(file, dates, highs, lows, date_index, high_index, low_index):
+    with open(file) as x:
+        reader = csv.reader(x)
+        header_row = next(reader)
 
-header_row = next(csv_file)
-print(type(header_row))
+        for row in reader:
+            converted_date = datetime.strptime(row[date_index], "%Y-%m-%d")
+            try:
+                high = int(row[high_index])
+                low = int(row[low_index])
+            except ValueError:
+                print("Missing data for", converted_date)
+            else:
+                dates.append(converted_date)
+                highs.append(high)
+                lows.append(low)
 
-for index, column_header in enumerate(header_row):
-    print("Index:", index, "Column Name:", column_header)
-    print(index, column_header)
 
-highs = []
+# Sitka Weather
+file = "sitka_weather_2018_simple.csv"
+
 dates = []
+highs = []
 lows = []
 
-for row in csv_file:
-    try:
-        high = int(row[4])
-        low = int(row[5])
-        converted_date = datetime.strptime(row[2], "%Y-%m-%d")
-    except ValueError:
-        print("Missing data for {converted_date}")
-    else:
-        highs.append(high)
-        lows.append(low)
-        dates.append(converted_date)
+get_weather(file, dates, highs, lows, date_index=2, high_index=5, low_index=6)
+
+# Plot Sitka
+fig, (ax1, ax2) = plt.subplots(2)
+fig.suptitle(
+    "Temperature comparison between SITKA AIRPORT, AK US and DEATH VALLEY, CA US"
+    + "\n"
+    + "SITKA AIRPORT, AK US"
+)
+ax1.plot(dates, highs, c="red", alpha=0.5)
+ax1.plot(dates, lows, c="blue", alpha=0.5)
+ax1.fill_between(dates, highs, lows, facecolor="blue", alpha=0.1)
 
 
-fig, ax = plt.subplots(2, 2)
-fig = plt.figure()
-ax.plot(dates, highs, c="red")
-ax.plot(dates, lows, c="blue")
+# Death Valley Weather
+file = "death_valley_2018_simple.csv"
+
+dates = []
+highs = []
+lows = []
+
+get_weather(file, dates, highs, lows, date_index=2, high_index=4, low_index=5)
+
+# Plot Death Valley
+ax2.plot(dates, highs, c="red", alpha=0.5)
+ax2.plot(dates, lows, c="blue", alpha=0.5)
 plt.fill_between(dates, highs, lows, facecolor="blue", alpha=0.1)
-plt.show()
-plt.title("Daily high and low temperatures - 2018", fontsize=16)
+plt.title("DEATH VALLEY, CA US", fontsize=12)
+plt.ylim(30, 130)
+
+# Format Overall Plot
 plt.xlabel("", fontsize=12)
-plt.ylabel("Temperature (F)", fontsize=12)
 plt.tick_params(axis="both", labelsize=12)
+fig.autofmt_xdate()
 
+# Graph
 plt.show()
-####
-# fig = plt.figure()
-
-# plt.plot(dates, highs, c="red")
-# plt.plot(dates, lows, c="blue")
-
-# fig.autofmt_xdate()
-
-# plt.fill_between(dates, highs, lows, facecolor="blue", alpha=0.1)
-
-# plt.title("Daily high and low temperatures - 2018", fontsize=16)
-# plt.xlabel("", fontsize=12)
-# plt.ylabel("Temperature (F)", fontsize=12)
-# plt.tick_params(axis="both", labelsize=12)
-
-# fig, ax = plt.subplots(2, 2)
-
-# ax[0].plot(dates, highs, c="red")
-# ax[1].plot(dates, lows, c="blue")
-
-# plt.show()

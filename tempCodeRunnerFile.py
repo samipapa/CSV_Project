@@ -1,3 +1,1 @@
-mydate = "2018-07-01"
-converted_date = datetime.strptime(mydate, "%Y-%m-%d")
-print(converted_date)
+plt.fill_between(dates, highs, lows, facecolor="blue", alpha=0.1)
